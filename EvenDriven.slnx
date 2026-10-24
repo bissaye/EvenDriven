@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/v0/">
+    <Project Path="src/v0/EvenDriven.App/EvenDriven.App.csproj" />
+    <Project Path="src/v0/EvenDriven.Domain/EvenDriven.Domain.csproj" />
+    <Project Path="src/v0/EvenDriven.Infra/EvenDriven.Infra.csproj" />
+    <Project Path="src/v0/EvenDriven.Api/EvenDriven.Api.csproj" />
+  </Folder>
+</Solution>
