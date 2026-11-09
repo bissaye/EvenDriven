@@ -23,10 +23,16 @@ namespace EvenDriven.Infra.Persistence.Respositories
             _dbContext.Set<T>().Remove(entity);
         }
 
+        public async Task<Result<bool>> DoesItExistAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            var exists = await _dbContext.Set<T>().AnyAsync(predicate, cancellationToken);
+            return Result<bool>.Success(exists);
+        }
+
         public async Task<Result<PagedResult<T>>> GetAllAsync(PagedQuery pagedQuery, CancellationToken cancellationToken = default)
         {
             var totalCount = await _dbContext.Set<T>().CountAsync(cancellationToken);
-            var Data = await _dbContext.Set<T>().Skip(pagedQuery.skip).Take(pagedQuery.PageSize).ToListAsync(cancellationToken);
+            var Data = await _dbContext.Set<T>().OrderBy(t => t.CreatedAt).ThenBy(b => b.Id).Skip(pagedQuery.skip).Take(pagedQuery.PageSize).ToListAsync(cancellationToken);
             return Result<PagedResult<T>>.Success(new PagedResult<T>()
             {
                 Items = Data,

@@ -30,8 +30,7 @@ namespace EvenDriven.Infra.Persistence.Respositories
                 return Result<PagedResult<BookingEntity>>.Failure( new Error("400", "Invalid booking status.", ErrorType.Validation));
             }
 
-            
-            var Data = _dbContext.Booking.Where(b => b.Status == parsedStatus && b.UserId == userId);
+            var Data = _dbContext.Booking.Where(b => b.Status == parsedStatus && b.UserId == userId).OrderBy(b => b.CreatedAt).ThenBy(b => b.Id);
             var totalCount = await Data.CountAsync(cancellationToken);
             return Result<PagedResult<BookingEntity>>.Success(new PagedResult<BookingEntity>()
             {
@@ -44,7 +43,7 @@ namespace EvenDriven.Infra.Persistence.Respositories
 
         public async Task<Result<PagedResult<BookingEntity>>> GetBookingsByUserIdAsync(Guid userId, PagedQuery pagedQuery, CancellationToken cancellationToken = default)
         {
-            var Data = _dbContext.Booking.Where(b => b.UserId == userId);
+            var Data = _dbContext.Booking.Where(b => b.UserId == userId).OrderBy(b => b.CreatedAt).ThenBy(b => b.Id);
             var totalCount = await Data.CountAsync(cancellationToken);
             return Result<PagedResult<BookingEntity>>.Success(new PagedResult<BookingEntity>()
             {

@@ -2,9 +2,12 @@
 using EvenDriven.App.Auth.Services.Concretes;
 using EvenDriven.App.Booking.Services;
 using EvenDriven.App.Booking.Services.Concretes;
+using EvenDriven.App.User.DTOs;
 using EvenDriven.App.User.Services;
 using EvenDriven.App.User.Services.Concretes;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 
 namespace EvenDriven.App
@@ -23,6 +26,7 @@ namespace EvenDriven.App
             services.AddScoped<IAuthServices, AuthServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IBookingServices, BookingServices>();
+            services.AddValidatorsFromAssemblyContaining<RegisterUserDtoReqValidator>();
             
 
             return services;

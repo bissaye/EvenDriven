@@ -8,6 +8,9 @@
 *.userosscache
 *.sln.docstates
 
+# All databases
+*.db
+
 # Build results
 [Bb]in/
 [Oo]bj/

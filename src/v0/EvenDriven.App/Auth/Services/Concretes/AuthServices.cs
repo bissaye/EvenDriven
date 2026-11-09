@@ -1,4 +1,5 @@
 ﻿using EvenDriven.App.Auth.DTOs;
+using EvenDriven.App.Common.Helpers;
 using EvenDriven.App.Common.Services;
 using EvenDriven.App.User.DTOs;
 using EvenDriven.Domain.Entities;
@@ -23,18 +24,18 @@ namespace EvenDriven.App.Auth.Services.Concretes
         public async Task<Result<UserAuthResDto>> AuthenticateUserAsync(UserAuthReqDto request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Authenticating user with email: {Email}", request.email);
-            var user = await _userRepository.GetByConditionAsync(u => u.Email == request.email, cancellationToken);
-            
+            var user = await _userRepository.GetByConditionAsync(u => u.Email == NormalizeEmail.Normalize(request.email),   cancellationToken);
+
             if (!user.IsSuccess)
             {
                 _logger.LogWarning("User not found with email: {Email}", request.email);
-                return Result<UserAuthResDto>.Failure(user.Error);
+                return Result<UserAuthResDto>.Failure(new Error("401", "Invalid Credentials", ErrorType.Unauthorized));
             }
 
             if (!_passwordServices.VerifyPassword(request.password, user.Value.PasswordHash))
             {
                 _logger.LogWarning("Invalid password for user with email: {Email}", request.email);
-                return Result<UserAuthResDto>.Failure(new Error("401", "Invalid password.", ErrorType.Unauthorized));
+                return Result<UserAuthResDto>.Failure(new Error("401", "Invalid Credentials", ErrorType.Unauthorized));
             }
 
             _logger.LogInformation("User authenticated successfully with email: {Email}", request.email);

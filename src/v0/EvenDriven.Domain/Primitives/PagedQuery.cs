@@ -14,9 +14,15 @@ namespace EvenDriven.Domain.Primitives
         public int PageSize 
         { 
             get; 
-            init => field = value >= 1 ? value : throw new ArgumentOutOfRangeException(nameof(PageSize), "Page size must be greater than 0.");
+            init => field = DefinePageSize(value);
         }
 
         public int skip => (Page - 1) * PageSize;
+
+        private int DefinePageSize(int value) {
+                if (value< 1)
+                    throw new ArgumentOutOfRangeException(nameof(PageSize), "Page size must be greater than 0.");
+            return value;
+        }
     }
 }

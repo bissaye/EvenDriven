@@ -1,4 +1,5 @@
-﻿using EvenDriven.App.Common.Services;
+﻿using EvenDriven.Api.Services;
+using EvenDriven.App.Common.Services;
 
 namespace EvenDriven.Api.Middlewares
 {
@@ -10,10 +11,11 @@ namespace EvenDriven.Api.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync( HttpContext httpContext, IJwtServices jwtServices)
+        public async Task InvokeAsync( HttpContext httpContext, IJwtServices jwtServices, IUserContextAccessor userContextAccessor)
         {
             var userId  = jwtServices.GetUserIdFromToken(httpContext.User);
-            httpContext.Items["CurrentUserId"] = userId;
+
+            userContextAccessor.SetUserId(userId);
 
             await _next(httpContext);
         }
